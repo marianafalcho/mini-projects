@@ -20,5 +20,5 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{.Values.image.repository}}:{{.Values.image.tag}}"
         ports:
-        - containerPort: {{ .Values.ContainerPort }}
+        - containerPort: {{ .Values.containerPort }}
 
