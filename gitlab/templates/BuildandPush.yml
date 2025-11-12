@@ -1,0 +1,18 @@
+build-rootless:
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: [""]
+  stage: build
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+    CI_REGISTRY: marianaffalzone/flask-images
+  before_script:
+    - mkdir -p ~/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$DOCKER_USERNAME\",\"password\":\"$DOCKER_PASSWORD\"}}}" > ~/.docker/config.json
+  script:
+    - |
+      buildctl-daemonless.sh build \
+        --frontend dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --output type=image,name=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA,push=true
